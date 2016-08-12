@@ -70,14 +70,7 @@ function loadData(theData)
             }
         }
     }
-    $(createButtons.erase).click();
-    for(var y= 0; y < 50; y++)
-    {
-        for(var x= 0; x < 50; x++)
-        {
-            simulateClickAtLocation(x,y,element);
-        }
-    }
+    
     setTimeout(function() {
         var toolNow;
         console.log('Loading floorplan... ' + theData.terrain[0].room);
