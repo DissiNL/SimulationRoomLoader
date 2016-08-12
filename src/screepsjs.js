@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto-room loader for screeps
 // @namespace    https://screeps.com/a/#!/sim/custom
-// @version      1.1
+// @version      1.2
 // @description  try to take over the world!
 // @author       Mark Bertels
 // @match        https://screeps.com/a/#!/sim/custom
