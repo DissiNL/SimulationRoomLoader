@@ -1,12 +1,12 @@
-* Tampermonkey script for loading rooms to the simulator ( Custom mode only )
+# Tampermonkey script for loading rooms to the simulator ( Custom mode only ) #
 
 
-* known quircks
+## known quircks ##
  - Loading takes LONG
  - After load the controller will follow your mouse untill you click
 
 
-* Instalation
+## Instalation ##
 
 Have tampermonkey installed
 
@@ -16,6 +16,6 @@ Have tampermonkey installed
  4. ![alt install](/doc/install.png)  
 
 
-* Run script
+## Run script ##
  - Right click when the simulation has loaded
  - Tapermonkey - load screep room ![alt contextmenu](/doc/rightclick-menu.png)
