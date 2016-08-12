@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Auto-room loader for screeps
 // @namespace    https://screeps.com/a/#!/sim/custom
-// @version      1
+// @version      1.1
 // @description  try to take over the world!
 // @author       Mark Bertels
 // @match        https://screeps.com/a/#!/sim/custom
 // @grant        none
+// @run-at       context-menu
 // ==/UserScript==
 function getOffset(el) {
     el = el.getBoundingClientRect();
@@ -70,9 +71,13 @@ function loadData(theData)
         }
     }
     $(createButtons.erase).click();
-    for(var x= 0; x < 50; x++)
-        for(var y= 0; y < 50; y++)
+    for(var y= 0; y < 50; y++)
+    {
+        for(var x= 0; x < 50; x++)
+        {
             simulateClickAtLocation(x,y,element);
+        }
+    }
     setTimeout(function() {
         var toolNow;
         console.log('Loading floorplan... ' + theData.terrain[0].room);
@@ -112,6 +117,7 @@ function loadData(theData)
             }
         }
         $(createButtons.controller).click();
+        alert("Done loading room");
     },1);
 }
 
