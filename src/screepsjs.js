@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto-room loader for screeps
 // @namespace    https://screeps.com/a/#!/sim/custom
-// @version      1.2
+// @version      1.3
 // @description  try to take over the world!
 // @author       Mark Bertels
 // @match        https://screeps.com/a/#!/sim/custom
@@ -16,7 +16,7 @@ function getOffset(el) {
     };
 }
 
-function simulateClickAtLocation(theX, theY, element) {
+function simulateClickAtLocation(theX, theY, element, includeMouseDownMouseUp) {
 
     var offset = getOffset(element);
     var offsetPerElement = element.offsetHeight / 50;      // middle of square click.
@@ -26,11 +26,14 @@ function simulateClickAtLocation(theX, theY, element) {
     var xToFireFromScreen = Math.round(offset.left + xToFireFromClient);
     var yToFireFromScreen = Math.round(offset.top + yToFireFromClient);
     var eventData = {"clientX" : xToFireFromScreen, "clientY" :yToFireFromScreen , "button" : 0, "buttons" : 1};
-
-    var mEvent = new MouseEvent("mousemove", eventData);
-    var mClick = new MouseEvent("click", eventData);
-    element.dispatchEvent(mEvent);
-    element.dispatchEvent(mClick);
+    var evtDataBtnDown = {"clientX" : xToFireFromScreen+1, "clientY" :yToFireFromScreen +1, "button" : 0, "buttons" : 1};
+    var evtDataBtnDownMv = {"clientX" : xToFireFromScreen, "clientY" :yToFireFromScreen , "button" : 0, "buttons" : 1};
+    var evtDataBtnDownMvPx = {"clientX" : xToFireFromScreen+1, "clientY" :yToFireFromScreen +1, "button" : 0, "buttons" : 1};
+    var evtDataBtnUp = {"clientX" : xToFireFromScreen+1, "clientY" :yToFireFromScreen +1, "button" : 0, "buttons" : 0};
+    element.dispatchEvent(new MouseEvent("mousedown", evtDataBtnDown)); // somehow we need a click 
+    element.dispatchEvent(new MouseEvent("mousemove", evtDataBtnDownMv)); // Move mouse to same x/y 
+    element.dispatchEvent(new MouseEvent("mousemove", evtDataBtnDownMvPx)); // Move mouse to x/y with 1 pixel offset
+    element.dispatchEvent(new MouseEvent("mouseup", eventData)); // we need a mouse up  
 }
 
 function loadData(theData)
@@ -48,6 +51,7 @@ function loadData(theData)
             break;
         }
     }
+
     var results = $('.aside-content');
     for(var i = 0 ; i < results.length; i++)
     {
@@ -66,59 +70,61 @@ function loadData(theData)
             }
             else if(clz == "{'md-raised': Room.selectedAction.customize == 'erase'}")
             {
-                createButtons.erase = toCheck;
+                createButtons['erase'] = toCheck;
+                console.log('Found erase button: '  + toCheck);
             }
         }
     }
+
+    var toolNow;
+    var toErase = [];
+    console.log('Loading floorplan... ' + theData.terrain[0].room);
     
-    setTimeout(function() {
-        var toolNow;
-        console.log('Loading floorplan... ' + theData.terrain[0].room);
-        for(var t = 0 ; t < theData.terrain[0].terrain.length; t++)
+    for(var t = 0 ; t < theData.terrain[0].terrain.length; t++)
+    {
+        var terrainNow = Number(theData.terrain[0].terrain[t]);
+        var y = Math.floor(t/50);
+        var x = (t%50);
+        if(terrainNow == 0)
         {
-            var terrainNow = Number(theData.terrain[0].terrain[t]);
-            var y = Math.floor(t/50);
-            var x = (t%50);
-            if(terrainNow === 0)
+            // if(toolNow != 'erase')
             {
-                if(toolNow != 'erase')
-                {
-                    $(createButtons.erase).click();
-                    toolNow = 'erase';
-                }
-                simulateClickAtLocation(x,y,element);
-                continue;
+                createButtons.erase.click();
+                toolNow = 'erase';
             }
-
-            if((terrainNow & 1) == 1)
-            {
-                if(toolNow != 'wall')
-                {
-                    $(createButtons.wall).click();
-                    toolNow = 'wall';
-                }
-                simulateClickAtLocation(x,y,element);
-            }
-            if( (terrainNow & 2) == 2)
-            {
-                if(toolNow != 'swamp')
-                {
-                    $(createButtons.swamp).click();
-                    toolNow = 'swamp';
-                }
-                simulateClickAtLocation(x,y,element);
-            }
+            simulateClickAtLocation(x,y,element);
         }
-        $(createButtons.controller).click();
-        alert("Done loading room");
-    },1);
+        else if((terrainNow & 1) == 1)
+        {
+            // if(toolNow != 'wall')
+            {
+                createButtons.wall.click();
+                toolNow = 'wall';
+            }
+            simulateClickAtLocation(x,y,element);
+        }
+        else if( (terrainNow & 2) == 2)
+        {
+            // if(toolNow != 'swamp')
+            {
+                createButtons.swamp.click();
+                toolNow = 'swamp';
+            }
+            simulateClickAtLocation(x,y,element);
+        }
+    }
+    createButtons.controller.click();
+    var endTime = new Date().getTime();
+    var totalTime = endTime -startLoad;
+    alert("Done loading room in " + totalTime + 'ms');
 }
-
+var startLoad;
 (function() {
 
-    var roomToLoad = prompt("Please enter your room name", "E48N4");
+    var roomToLoad = prompt("Please enter your room name", "W12N12");
     if(roomToLoad !== null)
     {
+        startLoad = new Date().getTime();
         $.ajax({
             url: "https://screeps.com/api/game/room-terrain?room="+roomToLoad+"&encoded=true",
             success: loadData,
@@ -126,4 +132,4 @@ function loadData(theData)
         });
     }
 
-})();
+})();   
