@@ -11,8 +11,11 @@
 Have tampermonkey installed
 
  1. ![alt Dashboard](/doc/dashboard.png)  
+ - - - -
  2. ![alt utilities](/doc/utilities.png)  
+ - - - -
  3. ![alt import](/doc/import.png)  
+ - - - -
  4. ![alt install](/doc/install.png)  
 
 
