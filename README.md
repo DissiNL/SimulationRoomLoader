@@ -1,12 +1,7 @@
 # Tampermonkey script for loading rooms to the simulator ( Custom mode only ) #
 
 
-## known quircks ##
- - Loading takes LONG
- - After load the controller will follow your mouse untill you click
-
-
-## Instalation ##
+## Installation ##
 
 Have tampermonkey installed
 
@@ -20,5 +15,5 @@ Have tampermonkey installed
 
 
 ## Run script ##
- - Right click when the simulation has loaded
- - Tapermonkey - load screep room ![alt contextmenu](/doc/rightclick-menu.png)
+ - Right click in the room you wish to migrate
+ - Tampermonkey - begin migrate ![alt contextmenu](/doc/rightclick-menu.png)
