@@ -4,6 +4,7 @@
 // @version      1.4
 // @author       Mark Bertels, Esryok
 // @match        https://screeps.com/a/#!/sim/custom
+// @match        https://screeps.com/a/#!/room/*
 // @run-at       context-menu
 // @grant        none
 // ==/UserScript==
